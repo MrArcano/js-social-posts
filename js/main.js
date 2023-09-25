@@ -64,24 +64,11 @@ posts.forEach((post,index)=>{
     const {id,content,media,author,likes,created} = post;
 
     // Formato data
-    const dateArray = created.split("-");
-    dateArray.splice(0, 0, dateArray[1]);
-    dateArray.splice(2,1);
+    const date = dateUsToIt(created);
 
     // Icona
-    // Controllo se abbiamo src author.image
-    let icon = "";
-    if(author.image != null){
-        icon = `<img class="profile-pic" src="${author.image}" alt="${author.name}">`;
-    }else{
-        let initial="";
-        const nameArray = author.name.split(" ");
-        nameArray.forEach((stringa)=>{
-            initial += stringa.charAt(0);
-        });
-        icon = `<div class="profile-pic-default"><span>${initial}</span></div>`;
-    }
-
+    const icon = iconUser(author);
+    
     postList.innerHTML += `
     <div class="post">
         <div class="post__header">
@@ -91,7 +78,7 @@ posts.forEach((post,index)=>{
                 </div>
                 <div class="post-meta__data">
                     <div class="post-meta__author">${author.name}</div>
-                    <div class="post-meta__time">${dateArray.join("-")}</div>
+                    <div class="post-meta__time">${date}</div>
                 </div>                    
             </div>
         </div>
@@ -114,9 +101,6 @@ posts.forEach((post,index)=>{
         </div>            
     </div>
     `;
-        
-    
-
 });
 
 // Button like
@@ -126,33 +110,56 @@ const likeCounterArray = document.getElementsByClassName("js-likes-counter");
 for (const key in btnLikeArray) {
     if (Object.hasOwnProperty.call(btnLikeArray, key)) {
         const btnLike = btnLikeArray[key];
-        const likeCounter = likeCounterArray[key];
         btnLike.addEventListener("click",function(){
-            // Change color liked
-            btnLike.classList.toggle("like-button--liked");
-            // Attraverso un attributo custom definisco se è stato o meno cliccato
-            if(!btnLike._clicked){
-                btnLike._clicked = true;
-                // Aumento i like
-                posts[key].likes++;
-            }else{
-                btnLike._clicked = false;
-                // Diminuisco i like
-                posts[key].likes--;
-            }
-            // Stampo a schermo il nuovo valore di like
-            likeCounter.innerHTML = posts[key].likes;
+            handlerBtn(this,key);
         });
     }
 }
-/* # Logica
 
+// ----------------------------------------------
+// --------- Function for EventListener ---------
+// ----------------------------------------------
+function handlerBtn(btn,index){
+    // Change color liked
+    btn.classList.toggle("like-button--liked");
+    // Attraverso un attributo custom definisco se è stato o meno cliccato
+    if(!btn._clicked){
+        posts[index].likes++;
+    }else{
+        posts[index].likes--;
+    }
+    // Visto che è stato cliccato cambio lo stato del flag (se true passa a false, e viceversa)
+    btn._clicked = !btn._clicked;
+    // Stampo a schermo il nuovo valore di like
+    likeCounterArray[index].innerHTML = posts[index].likes;
+}
 
-- Al click del tasto "Mi Piace" cambio il colore del button "active", aumento il contatore dei like, nel mio array di oggetti, e conservo l'informazione che il like è stato premuto
+// ----------------------------------------------
+// ---------- Function Date USA to ITA ----------
+// ----------------------------------------------
+function dateUsToIt(dateUs){
+    const dateArray = dateUs.split("-");
+    dateArray.splice(0, 0, dateArray[1]);
+    dateArray.splice(2,1);
+    
+    return dateArray.join("-");
+}
 
-### Bonus
-- formatto in modo italiano la data lavorando sulla stringa originale
-
-- creo un div sottostante all'immagine utente che nel caso in cui non dovessimo avere l'immagine, visualizza le iniziali dell'utente
-
-- Utilizzando l'informazione del click precedentemente conservata, possiamo decrementare il contatore dei like, se vieni ripremuto il pulsante */
+// ----------------------------------------------
+// ------------- Function Icon User -------------
+// ----------------------------------------------
+function iconUser(author){
+    let icon = "";
+    // Controllo se ho un src e non null
+    if(author.image != null){
+        icon = `<img class="profile-pic" src="${author.image}" alt="${author.name}">`;
+    }else{
+        let initial="";
+        const nameArray = author.name.split(" ");
+        nameArray.forEach((stringa)=>{
+            initial += stringa.charAt(0);
+        });
+        icon = `<div class="profile-pic-default"><span>${initial}</span></div>`;
+    }
+    return icon;
+}
