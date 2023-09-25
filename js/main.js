@@ -68,12 +68,26 @@ posts.forEach((post,index)=>{
     dateArray.splice(0, 0, dateArray[1]);
     dateArray.splice(2,1);
 
+    // Icona
+    // Controllo se abbiamo src author.image
+    let icon = "";
+    if(author.image != null){
+        icon = `<img class="profile-pic" src="${author.image}" alt="${author.name}">`;
+    }else{
+        let initial="";
+        const nameArray = author.name.split(" ");
+        nameArray.forEach((stringa)=>{
+            initial += stringa.charAt(0);
+        });
+        icon = `<div class="profile-pic-default"><span>${initial}</span></div>`;
+    }
+
     postList.innerHTML += `
     <div class="post">
         <div class="post__header">
             <div class="post-meta">                    
                 <div class="post-meta__icon">
-                    <img class="profile-pic" src="${author.image}" alt="${author.name}">                    
+                    ${icon}            
                 </div>
                 <div class="post-meta__data">
                     <div class="post-meta__author">${author.name}</div>
@@ -100,6 +114,8 @@ posts.forEach((post,index)=>{
         </div>            
     </div>
     `;
+        
+    
 
 });
 
@@ -120,6 +136,7 @@ for (const key in btnLikeArray) {
                 // Aumento i like
                 posts[key].likes++;
             }else{
+                btnLike._clicked = false;
                 // Diminuisco i like
                 posts[key].likes--;
             }
