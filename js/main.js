@@ -99,12 +99,27 @@ posts.forEach((post,index)=>{
 
 // Button like
 const btnLikeArray = document.getElementsByClassName("js-like-button");
+const likeCounterArray = document.getElementsByClassName("js-likes-counter");
 
 for (const key in btnLikeArray) {
     if (Object.hasOwnProperty.call(btnLikeArray, key)) {
-        const element = btnLikeArray[key];
-        element.addEventListener("click",function(){
-            element.classList.toggle("like-button--liked");
+        const btnLike = btnLikeArray[key];
+        const likeCounter = likeCounterArray[key];
+        btnLike.addEventListener("click",function(){
+            // Change color liked
+            btnLike.classList.toggle("like-button--liked");
+            // Attraverso un attributo custom definisco se è stato o meno cliccato
+            if(!btnLike._clicked){
+                btnLike._clicked = true;
+                // Aumento i like
+                posts[key].likes++;
+            }else{
+                // Diminuisco i like
+                posts[key].likes--;
+            }
+            // Stampo a schermo il nuovo valore di like
+            likeCounterArray[key].innerHTML = posts[key].likes;
+
         });
     }
 }
