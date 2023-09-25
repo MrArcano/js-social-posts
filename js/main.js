@@ -62,6 +62,12 @@ const postList = document.querySelector(".posts-list");
 posts.forEach((post,index)=>{
     // - Destrutturo il mio post
     const {id,content,media,author,likes,created} = post;
+
+    // Formato data
+    const dateArray = created.split("-");
+    dateArray.splice(0, 0, dateArray[1]);
+    dateArray.splice(2,1);
+
     postList.innerHTML += `
     <div class="post">
         <div class="post__header">
@@ -71,7 +77,7 @@ posts.forEach((post,index)=>{
                 </div>
                 <div class="post-meta__data">
                     <div class="post-meta__author">${author.name}</div>
-                    <div class="post-meta__time">${created}</div>
+                    <div class="post-meta__time">${dateArray.join("-")}</div>
                 </div>                    
             </div>
         </div>
@@ -118,8 +124,7 @@ for (const key in btnLikeArray) {
                 posts[key].likes--;
             }
             // Stampo a schermo il nuovo valore di like
-            likeCounterArray[key].innerHTML = posts[key].likes;
-
+            likeCounter.innerHTML = posts[key].likes;
         });
     }
 }
