@@ -55,13 +55,13 @@ const posts = [
         "created": "12-05-2023"
     }
 ];
-
+// Output post
 const postList = document.querySelector(".posts-list");
 
-
-posts.forEach((post)=>{
+// - Utilizzando il template compilo i dati da js
+posts.forEach((post,index)=>{
+    // - Destrutturo il mio post
     const {id,content,media,author,likes,created} = post;
-
     postList.innerHTML += `
     <div class="post">
         <div class="post__header">
@@ -77,12 +77,12 @@ posts.forEach((post)=>{
         </div>
         <div class="post__text">${content}</div>
         <div class="post__image">
-            <img src="${media}" alt="">
+            <img src="${media}" alt="${media}">
         </div>
         <div class="post__footer">
             <div class="likes js-likes">
                 <div class="likes__cta">
-                    <a class="like-button  js-like-button" href="#" data-postid="1">
+                    <a class="like-button  js-like-button" href="#" data-postid="${id}">
                         <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                         <span class="like-button__label">Mi Piace</span>
                     </a>
@@ -94,4 +94,28 @@ posts.forEach((post)=>{
         </div>            
     </div>
     `;
+
 });
+
+// Button like
+const btnLikeArray = document.getElementsByClassName("js-like-button");
+
+for (const key in btnLikeArray) {
+    if (Object.hasOwnProperty.call(btnLikeArray, key)) {
+        const element = btnLikeArray[key];
+        element.addEventListener("click",function(){
+            element.classList.toggle("like-button--liked");
+        });
+    }
+}
+/* # Logica
+
+
+- Al click del tasto "Mi Piace" cambio il colore del button "active", aumento il contatore dei like, nel mio array di oggetti, e conservo l'informazione che il like è stato premuto
+
+### Bonus
+- formatto in modo italiano la data lavorando sulla stringa originale
+
+- creo un div sottostante all'immagine utente che nel caso in cui non dovessimo avere l'immagine, visualizza le iniziali dell'utente
+
+- Utilizzando l'informazione del click precedentemente conservata, possiamo decrementare il contatore dei like, se vieni ripremuto il pulsante */
